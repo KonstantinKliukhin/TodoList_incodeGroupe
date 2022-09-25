@@ -1,15 +1,12 @@
-import { IUser } from './user';
-
-export enum IssueState {
-  OPEN = 'open',
-  CLOSED = 'closed',
-}
+import { IUser } from "./user";
 
 export enum IssueType {
-  OPEN = 'open',
-  CLOSED = 'closed',
-  ALL = 'all',
+  OPEN = "open",
+  CLOSED = "closed",
+  ALL = "all",
 }
+
+export type IssueState = IssueType.OPEN | IssueType.CLOSED;
 
 export interface IIssue {
   id: number;
@@ -19,4 +16,6 @@ export interface IIssue {
   closedAt?: string;
   commentsNumber: number;
   user: IUser;
+  assignee?: IUser;
+  assignees?: IUser[];
 }

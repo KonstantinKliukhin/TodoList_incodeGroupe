@@ -1,2 +1,3 @@
-export type ApiRequest<ArgsType, ReturnType> 
-	= (args: ArgsType) => Promise<ReturnType>
+export type ApiRequest<ArgsType, ReturnType> = (
+  args: ArgsType
+) => Promise<ReturnType>;

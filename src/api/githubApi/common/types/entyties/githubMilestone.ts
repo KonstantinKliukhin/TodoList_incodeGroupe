@@ -1,4 +1,4 @@
-import { IGithubUser } from './githubUser';
+import { IGithubUser } from "./githubUser";
 
 export interface IGithubMilestone {
   url: string;

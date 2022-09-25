@@ -1,4 +1,4 @@
-import { getIssueType } from './getIssueTypes';
+import { getIssueType } from "./getIssueTypes";
 
 export interface IGithubApi {
   getIssues: getIssueType;

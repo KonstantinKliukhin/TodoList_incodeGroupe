@@ -1,7 +1,7 @@
-import { IGithubUser } from './githubUser';
-import { IGithubMilestone } from './githubMilestone';
-import { IGithubPullRequest } from './githubPullRequest';
-import { IssueState } from '../../../../../common/types/issue';
+import { IGithubUser } from "./githubUser";
+import { IGithubMilestone } from "./githubMilestone";
+import { IGithubPullRequest } from "./githubPullRequest";
+import { IssueState } from "../../../../../common/types/issue";
 
 export interface IGithubIssueLabel {
   id: number;
@@ -28,7 +28,7 @@ export interface IGithubIssue {
   body?: string;
   user: IGithubUser;
   labels: IGithubIssueLabel[];
-  assignee: IGithubUser;
+  assignee?: IGithubUser;
   assignees?: IGithubUser[];
   milestone: IGithubMilestone;
   locked: boolean;

@@ -1,8 +1,13 @@
-import { FC, DragEventHandler } from 'react'
-import { Card } from 'react-bootstrap';
+import { FC, DragEventHandler } from "react";
+import { Card } from "react-bootstrap";
+import { IIssue } from "../../common/types/issue";
+import getCardTimeText from "./getCardTime";
 
-const TodoCard: FC = () => {
+interface TodoCardProps {
+	todo: IIssue;
+}
 
+const TodoCard: FC<TodoCardProps> = ({ todo }) => {
 	// const dragStartHandler: DragEventHandler<HTMLDivElement> = (e) => {
 
 	// }
@@ -17,26 +22,29 @@ const TodoCard: FC = () => {
 
 	const dragOverHandler: DragEventHandler<HTMLDivElement> = (e) => {
 		e.preventDefault();
-	}
+	};
 
 	const dropHandler: DragEventHandler<HTMLDivElement> = (e) => {
 		e.preventDefault();
-	}
+	};
 
+	const cardTimeText = getCardTimeText(todo);
 
 	return (
-		<Card 
-			// draggable={true}
-			// onDragStart={dragStartHandler}
-			// onDragLeave={dragLeaveHandler}
-			// onDragEnd={dragEndHandler}
-			// onDragOver={dragOverHandler}
-			// onDrop={dropHandler}
+		<Card
+		// draggable={true}
+		// onDragStart={dragStartHandler}
+		// onDragLeave={dragLeaveHandler}
+		// onDragEnd={dragEndHandler}
+		// onDragOver={dragOverHandler}
+		// onDrop={dropHandler}
 		>
 			<Card.Body>
-				<Card.Title>Some issue Title</Card.Title>
-				<Card.Text>#315 opened 3days ago</Card.Text>
-				<Card.Text>Admin | Comments: 3</Card.Text>
+				<Card.Title>{todo.title}</Card.Title>
+				<Card.Text>{cardTimeText}</Card.Text>
+				<Card.Text>
+					{todo.user.name} | Comments: {todo.commentsNumber}
+				</Card.Text>
 			</Card.Body>
 		</Card>
 	);

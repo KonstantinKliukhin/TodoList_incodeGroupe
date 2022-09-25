@@ -1,7 +1,4 @@
-import normalizeIssue from './normalizeIssue';
-import normalizeUser from './normalizeUser';
+import normalizeIssue from "./normalizeIssue";
+import normalizeUser from "./normalizeUser";
 
-export {
-  normalizeIssue,
-  normalizeUser
-};
+export { normalizeIssue, normalizeUser };

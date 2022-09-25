@@ -1,7 +1,11 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { reducer as todos } from "./slices/todoSlice";
 
 export const store = configureStore({
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  devTools: process.env.NODE_ENV !== "production",
   reducer: {
+    todos,
   },
 });
 
