@@ -14,7 +14,7 @@ interface ITodosListProps {
 
 const TodosList: FC<ITodosListProps> = ({ title, todosSelector }) => {
   const todos = useAppSelector<IIssue[]>(todosSelector);
-  const loading = useAppSelector((state) => state.todos.loading);
+  const loading = useAppSelector((state) => state.currentRepo.issuesLoading);
 
   const renderTodoCard = () => {
     return todos.map((todo) => {

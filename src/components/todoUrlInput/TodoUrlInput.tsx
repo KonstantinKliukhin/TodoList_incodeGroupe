@@ -2,7 +2,10 @@ import { FC, useState, ChangeEventHandler, FormEventHandler } from "react";
 import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 import { GithubApiURL } from "../../common/types/githubApiURL";
 import { useAppDispatch } from "../../redux/hooks";
-import { fetchAllTodos } from "../../redux/slices/todoSlice";
+import {
+  fetchAllIssues,
+  setCurrentUserRepo,
+} from "../../redux/slices/currentRepoSlice";
 import { getRoutesFromURL } from "./../../utils";
 
 const TodoURLInput: FC = () => {
@@ -25,12 +28,14 @@ const TodoURLInput: FC = () => {
     if (routes?.length === 2) {
       setURLInputError(false);
 
-      dispatch(
-        fetchAllTodos({
-          owner: routes[0],
-          repo: routes[1],
-        })
-      );
+      const options = {
+        owner: routes[0],
+        repo: routes[1],
+      };
+
+      dispatch(fetchAllIssues(options));
+
+      dispatch(setCurrentUserRepo(options));
     } else {
       setURLInputError(true);
     }

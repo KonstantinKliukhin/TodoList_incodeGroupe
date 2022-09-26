@@ -10,6 +10,7 @@ export type IssueState = IssueType.OPEN | IssueType.CLOSED;
 
 export interface IIssue {
   id: number;
+  number: number;
   title: string;
   state: IssueState;
   createdAt: string;

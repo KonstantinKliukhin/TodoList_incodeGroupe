@@ -2,9 +2,9 @@ import { FC } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import TodosList from "../todosList/TodosList";
 import {
-  allTodosSelector,
-  openedTodosSelector,
-  closedTodosSelector,
+  allIssuesSelector,
+  openedIssuesSelector,
+  closedIssuesSelector,
 } from "./../../redux/selectors/todosSelectors";
 
 const TodosLayout: FC = () => {
@@ -12,13 +12,13 @@ const TodosLayout: FC = () => {
     <Container>
       <Row>
         <Col>
-          <TodosList todosSelector={allTodosSelector} title="Todos" />
+          <TodosList todosSelector={allIssuesSelector} title="Todos" />
         </Col>
         <Col>
-          <TodosList todosSelector={openedTodosSelector} title="In Progress" />
+          <TodosList todosSelector={openedIssuesSelector} title="In Progress" />
         </Col>
         <Col>
-          <TodosList todosSelector={closedTodosSelector} title="Done" />
+          <TodosList todosSelector={closedIssuesSelector} title="Done" />
         </Col>
       </Row>
     </Container>

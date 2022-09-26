@@ -14,7 +14,7 @@ const App: FC = () => {
           <TodoURLInput />
         </Col>
       </Row>
-      <Row xs="auto" className="mt-5">
+      <Row xs="auto" className="my-4">
         <Col>
           <TodoBreadCrumb />
         </Col>

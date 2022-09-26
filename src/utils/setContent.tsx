@@ -3,7 +3,7 @@ import { AnyReactElement } from "../common/types/reactElements";
 
 export default function setContent<RenderContentArgs = null>(
   loadingState: Loading,
-  renderContent: () => AnyReactElement,
+  renderContent: (args?: RenderContentArgs) => AnyReactElement,
   renderContentArgs?: RenderContentArgs
 ): null | AnyReactElement {
   switch (loadingState) {
@@ -12,7 +12,7 @@ export default function setContent<RenderContentArgs = null>(
     case Loading.PENDING:
       return <p>Loading...</p>;
     case Loading.SUCCEEDED:
-      return renderContent();
+      return renderContent(renderContentArgs);
     case Loading.FAILED:
       return <p>Error!!!</p>;
     default:
