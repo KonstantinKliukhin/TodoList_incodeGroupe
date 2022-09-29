@@ -1,7 +1,7 @@
-import { IGithubUser } from "./githubUser";
+import { IssueType } from "../../../../../common/types/issue";
 import { IGithubMilestone } from "./githubMilestone";
 import { IGithubPullRequest } from "./githubPullRequest";
-import { IssueState } from "../../../../../common/types/issue";
+import { IGithubUser } from "./githubUser";
 
 export interface IGithubIssueLabel {
   id: number;
@@ -13,6 +13,8 @@ export interface IGithubIssueLabel {
   default: boolean;
 }
 
+export type GithubIssueState = IssueType.OPEN | IssueType.CLOSED;
+
 export interface IGithubIssue {
   id: number;
   node_id: string;
@@ -23,7 +25,7 @@ export interface IGithubIssue {
   events_url: string;
   html_url: string;
   number: number;
-  state: IssueState;
+  state: GithubIssueState;
   title: string;
   body?: string;
   user: IGithubUser;

@@ -1,24 +1,20 @@
+import { IssueType } from "../../common/types/issue";
+import TodosList from "../todosList/TodosList";
 import { FC } from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import TodosList from "../todosList/TodosList";
-import {
-  allIssuesSelector,
-  openedIssuesSelector,
-  closedIssuesSelector,
-} from "./../../redux/selectors/todosSelectors";
 
 const TodosLayout: FC = () => {
   return (
     <Container>
       <Row>
         <Col>
-          <TodosList todosSelector={allIssuesSelector} title="Todos" />
+          <TodosList type={IssueType.OPEN} />
         </Col>
         <Col>
-          <TodosList todosSelector={openedIssuesSelector} title="In Progress" />
+          <TodosList type={IssueType.INPROGRESS} />
         </Col>
         <Col>
-          <TodosList todosSelector={closedIssuesSelector} title="Done" />
+          <TodosList type={IssueType.CLOSED} />
         </Col>
       </Row>
     </Container>

@@ -1,15 +1,18 @@
-import { FC } from "react";
-import { Breadcrumb } from "react-bootstrap";
 import { GithubURL } from "../../common/types/githubURL";
 import { useAppSelector } from "../../redux/hooks";
+import { IRepo } from "./../../common/types/repository";
+import repoSelector from "./../../redux/selectors/repoSelector";
+import { FC } from "react";
+import { Breadcrumb } from "react-bootstrap";
 
 const TodoBreadCrumb: FC = () => {
-  const owner = useAppSelector((state) => state.currentRepo.owner);
-  const repo = useAppSelector((state) => state.currentRepo.repo);
+  const repo = useAppSelector<IRepo | null>(repoSelector);
 
-  if (!owner || !repo) {
+  if (!repo?.owner || !repo.repoName) {
     return null;
   }
+
+  const { owner, repoName } = repo;
 
   return (
     <Breadcrumb className="mt-3 fs-3 w-100">
@@ -18,9 +21,9 @@ const TodoBreadCrumb: FC = () => {
       </Breadcrumb.Item>
       <Breadcrumb.Item
         target="_blank"
-        href={`${GithubURL.BASEURL}/${owner}/${repo}`}
+        href={`${GithubURL.BASEURL}/${owner}/${repoName}`}
       >
-        {repo}
+        {repoName}
       </Breadcrumb.Item>
     </Breadcrumb>
   );

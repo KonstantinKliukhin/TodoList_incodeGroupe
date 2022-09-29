@@ -1,48 +1,106 @@
-import { FC, DragEventHandler } from "react";
-import { Card } from "react-bootstrap";
 import { IIssue } from "../../common/types/issue";
+import { useAppDispatch } from "../../redux/hooks";
+import {
+  issueOrderChanged,
+  currentIssueSet,
+  currentIssueDeleted,
+} from "../../redux/slices/reposSlice";
 import getCardTimeText from "./getCardTime";
+import { FC, DragEventHandler, useRef, DragEvent } from "react";
+import { Card } from "react-bootstrap";
 
 interface TodoCardProps {
   todo: IIssue;
+  todos: IIssue[];
 }
 
 const TodoCard: FC<TodoCardProps> = ({ todo }) => {
-  // const dragStartHandler: DragEventHandler<HTMLDivElement> = (e) => {
+  const cardRef = useRef<HTMLDivElement>(null);
 
-  // }
+  const dispatch = useAppDispatch();
 
-  // const dragLeaveHandler: DragEventHandler<HTMLDivElement> = (e) => {
-
-  // }
-
-  // const dragEndHandler: DragEventHandler<HTMLDivElement> = (e) => {
-
-  // }
-
-  const dragOverHandler: DragEventHandler<HTMLDivElement> = (e) => {
-    e.preventDefault();
+  const dragStartHandler: DragEventHandler<HTMLElement> = () => {
+    dispatch(currentIssueSet(todo));
   };
 
-  const dropHandler: DragEventHandler<HTMLDivElement> = (e) => {
+  const dragLeaveHandler: DragEventHandler<HTMLElement> = () => {
+    if (cardRef.current) {
+      cardRef.current.style.boxShadow = "none";
+    }
+  };
+
+  const dragEndHandler: DragEventHandler<HTMLElement> = () => {
+    if (cardRef.current) {
+      cardRef.current.style.boxShadow = "none";
+    }
+
+    dispatch(currentIssueDeleted());
+  };
+
+  const dragOverHandler: DragEventHandler<HTMLElement> = (e) => {
     e.preventDefault();
+
+    if (!cardRef.current) return;
+
+    const distaanceFromTopToCardMiddle =
+      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2;
+
+    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY;
+
+    if (isMouseUpperThanCardMiddle) {
+      cardRef.current.style.boxShadow = "0px -8px 3px #0b5ed7";
+    } else {
+      cardRef.current.style.boxShadow = "0px 8px 3px #0b5ed7";
+    }
+  };
+
+  const dropHandler = (e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+
+    if (!cardRef.current) return;
+
+    const distaanceFromTopToCardMiddle =
+      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2;
+
+    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY;
+
+    let displacement: number;
+
+    if (isMouseUpperThanCardMiddle) {
+      displacement = 0;
+    } else {
+      displacement = 1;
+    }
+
+    if (cardRef.current) {
+      cardRef.current.style.boxShadow = "none";
+    }
+
+    dispatch(
+      issueOrderChanged({
+        ...todo,
+        displacement,
+      })
+    );
   };
 
   const cardTimeText = getCardTimeText(todo);
 
   return (
     <Card
+      ref={cardRef}
+      className="cursor-grab"
       draggable={true}
-      // onDragStart={dragStartHandler}
-      // onDragLeave={dragLeaveHandler}
-      // onDragEnd={dragEndHandler}
-      // onDragOver={dragOverHandler}
-      // onDrop={dropHandler}
+      onDragStart={(e) => dragStartHandler(e)}
+      onDragLeave={(e) => dragLeaveHandler(e)}
+      onDragEnd={(e) => dragEndHandler(e)}
+      onDragOver={(e) => dragOverHandler(e)}
+      onDrop={(e) => dropHandler(e)}
     >
       <Card.Body>
         <Card.Title>{todo.title}</Card.Title>
         <Card.Text>
-          #{todo.number} {cardTimeText}
+          #{todo.order} {cardTimeText}
         </Card.Text>
         <Card.Text>
           {todo.user.name} | Comments: {todo.commentsNumber}

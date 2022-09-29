@@ -1,5 +1,5 @@
-import { IGithubUser } from "./githubUser";
 import { IGithubLicense } from "./githubLicense";
+import { IGithubUser } from "./githubUser";
 
 export interface IGithubTemplateRepository {
   id: number;

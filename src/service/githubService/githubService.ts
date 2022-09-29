@@ -1,18 +1,41 @@
-import { Service } from "../common/types/service";
 import { GithubApiURL } from "../../common/types/githubApiURL";
-import {
-  GetAllIssuesType,
-  GetRepoStarsType,
-  IGithubService,
-} from "./common/types/githubService";
+import { IIssue, IssueType } from "../../common/types/issue";
+import { IRepo } from "../../common/types/repository";
+import { IUser } from "../../common/types/user";
+import { ApiRequest } from "../common/types/apiRequest";
+import { FetchService } from "../common/types/fetchService";
+import { IReposService } from "../common/types/reposService";
 import { IGithubIssue } from "./common/types/entyties/githubIssue";
-import { IIssue } from "./../../common/types/issue";
-import { IUser } from "./../../common/types/user";
-import { IGithubUser } from "./common/types/entyties/githubUser";
 import { IGithubRepository } from "./common/types/entyties/githubRepository";
-import { RepoStars } from "../../common/types/repoStars";
+import { IGithubUser } from "./common/types/entyties/githubUser";
+import { IRepoInfo } from "./common/types/entyties/repoInfo";
 
-class GithubService extends Service implements IGithubService {
+interface IGetIssuesOptions {
+  owner: string;
+  repoName: string;
+  state: "all" | "open" | "closed";
+}
+
+type GetAllIssuesType = ApiRequest<
+  IGetIssuesOptions,
+  Pick<IRepo, "closedIssues" | "inProgressIssues" | "openIssues">
+>;
+
+export interface IGetRepoInfoOptions {
+  owner: string;
+  repoName: string;
+}
+
+type GetRepoInfoType = ApiRequest<IGetRepoInfoOptions, IRepoInfo>;
+
+interface IGetRepoOptions {
+  owner: string;
+  repoName: string;
+}
+
+export type GetRepoType = ApiRequest<IGetRepoOptions, IRepo>;
+
+class GithubService extends FetchService implements IReposService {
   authToken: string;
 
   constructor(authToken: string) {
@@ -25,9 +48,13 @@ class GithubService extends Service implements IGithubService {
     this.authToken = authToken;
   }
 
-  getAllIssues: GetAllIssuesType = async ({ owner, repo, state }) => {
+  private readonly getAllIssues: GetAllIssuesType = async ({
+    owner,
+    repoName,
+    state,
+  }) => {
     const url = new URL(
-      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repo}/${GithubApiURL.ISSUEPATH}`
+      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}/${GithubApiURL.ISSUEPATH}`
     );
 
     url.searchParams.append("state", state);
@@ -39,14 +66,15 @@ class GithubService extends Service implements IGithubService {
       },
     });
 
-    return res.map((element) => {
-      return this.normalizeIssue(element);
-    });
+    return this.normalizeIssues(res);
   };
 
-  getRepoStars: GetRepoStarsType = async ({ owner, repo }) => {
+  private readonly getRepoInfo: GetRepoInfoType = async ({
+    owner,
+    repoName,
+  }) => {
     const url = new URL(
-      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repo}`
+      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}`
     );
 
     const res = await this.request<IGithubRepository>(url, {
@@ -57,19 +85,47 @@ class GithubService extends Service implements IGithubService {
       },
     });
 
-    return this.normalizeRepoStars(res);
+    return this.normalizeRepoInfo(res);
   };
 
-  normalizeIssue = (issue: IGithubIssue): IIssue => {
+  getRepo: GetRepoType = async ({ owner, repoName }) => {
+    const issues = await this.getAllIssues({
+      owner,
+      repoName,
+      state: "all",
+    });
+
+    const repoInfo = await this.getRepoInfo({ owner, repoName });
+
+    return {
+      ...repoInfo,
+      ...issues,
+    };
+  };
+
+  private readonly normalizeIssue = (issue: IGithubIssue): IIssue => {
+    let state;
+
+    if (issue.state === IssueType.CLOSED) {
+      state = IssueType.CLOSED;
+    } else if (
+      issue.state === IssueType.OPEN &&
+      (issue.assignee || issue.assignees?.length)
+    ) {
+      state = IssueType.INPROGRESS;
+    } else {
+      state = IssueType.OPEN;
+    }
+
     return {
       id: issue.id,
-      number: issue.number,
+      order: issue.number,
       title: issue.title,
       createdAt: issue.created_at,
       closedAt: issue.closed_at,
       commentsNumber: issue.comments,
       user: this.normalizeUser(issue.user),
-      state: issue.state,
+      state,
       assignee: issue.assignee ? this.normalizeUser(issue.assignee) : undefined,
       assignees: issue.assignees?.map((assignee) =>
         this.normalizeUser(assignee)
@@ -77,15 +133,45 @@ class GithubService extends Service implements IGithubService {
     };
   };
 
-  normalizeUser = (user: IGithubUser): IUser => {
+  private readonly normalizeIssues = (issues: IGithubIssue[]) => {
+    const allIssues = issues.map((issue) => {
+      return this.normalizeIssue(issue);
+    });
+
+    return {
+      openIssues: allIssues.filter((issue) => {
+        return (
+          issue.state === IssueType.OPEN &&
+          !issue.assignee &&
+          !issue.assignees?.length
+        );
+      }),
+      inProgressIssues: allIssues.filter((issue) => {
+        return (
+          issue.state === IssueType.OPEN &&
+          (issue.assignee || issue.assignees?.length)
+        );
+      }),
+      closedIssues: allIssues.filter((issue) => {
+        return issue.state === IssueType.CLOSED;
+      }),
+    };
+  };
+
+  private readonly normalizeUser = (user: IGithubUser): IUser => {
     return {
       id: user.id,
       name: user.login,
     };
   };
 
-  normalizeRepoStars = (repo: IGithubRepository): RepoStars => {
-    return repo.stargazers_count;
+  private readonly normalizeRepoInfo = (repo: IGithubRepository): IRepoInfo => {
+    return {
+      id: repo.id,
+      starsNumber: repo.stargazers_count,
+      repoName: repo.name,
+      owner: this.normalizeUser(repo.owner).name,
+    };
   };
 }
 

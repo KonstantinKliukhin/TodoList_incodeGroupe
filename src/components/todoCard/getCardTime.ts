@@ -29,7 +29,7 @@ export default function getCardTimeText(todo: IIssue) {
     const differenceInHours = Math.floor(differenceInDays * 24);
 
     if (differenceInHours < 1) {
-      return `${firstWord} less then 1 hour ago, ${differenceInDays} ${todo.createdAt}`;
+      return `${firstWord} less then 1 hour ago`;
     }
 
     return `${firstWord} ${differenceInHours} hours ago`;

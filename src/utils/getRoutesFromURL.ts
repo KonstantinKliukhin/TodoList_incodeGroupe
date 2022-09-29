@@ -1,6 +1,6 @@
 import isValidURL from "./isValidURL";
 
-export default function getRoutesFromURL(url: string) {
+export default function getRoutesFromURL(url: string): string[] | null {
   if (!isValidURL(url)) {
     return null;
   }

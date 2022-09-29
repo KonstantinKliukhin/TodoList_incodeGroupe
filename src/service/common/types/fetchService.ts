@@ -1,12 +1,5 @@
-export interface IService {
-  request: <ReturnType>(
-    url: URL,
-    fetchOptions?: RequestInit
-  ) => Promise<ReturnType>;
-}
-
-export abstract class Service implements IService {
-  async request<ReturnType>(
+export abstract class FetchService {
+  protected async request<ReturnType>(
     url: URL,
     fetchOptions?: RequestInit
   ): Promise<ReturnType> {

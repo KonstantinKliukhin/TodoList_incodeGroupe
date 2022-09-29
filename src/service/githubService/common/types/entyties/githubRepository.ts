@@ -1,14 +1,14 @@
-import { IUser } from "../../../../../common/types/user";
-import { IGithubTemplateRepository } from "./githubTemplateRepository";
 import { IGithubLicense } from "./githubLicense";
 import { IGithubOrganization } from "./githubOrganization";
+import { IGithubTemplateRepository } from "./githubTemplateRepository";
+import { IGithubUser } from "./githubUser";
 
 export interface IGithubRepository {
   id: number;
   node_id: string;
   name: string;
   full_name: string;
-  owner: IUser;
+  owner: IGithubUser;
   private: boolean;
   html_url: string;
   description: string;

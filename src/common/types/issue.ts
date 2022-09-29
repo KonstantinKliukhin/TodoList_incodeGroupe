@@ -3,17 +3,16 @@ import { IUser } from "./user";
 export enum IssueType {
   OPEN = "open",
   CLOSED = "closed",
-  ALL = "all",
+  INPROGRESS = "inprogress",
 }
-
-export type IssueState = IssueType.OPEN | IssueType.CLOSED;
 
 export interface IIssue {
   id: number;
-  number: number;
+  order: number;
   title: string;
-  state: IssueState;
+  state: IssueType;
   createdAt: string;
+  updatedAt?: string;
   closedAt?: string;
   commentsNumber: number;
   user: IUser;

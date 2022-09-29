@@ -1,13 +1,23 @@
+import { storageRepoService } from "../service";
+import debounce from "./../utils/debounce";
+import getPreloadState from "./preloadState";
+import { reducer as repos } from "./slices/reposSlice";
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { reducer as currentRepo } from "./slices/currentRepoSlice";
 
 export const store = configureStore({
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: (gDM) => gDM({ serializableCheck: false }),
   devTools: process.env.NODE_ENV !== "production",
   reducer: {
-    currentRepo,
+    repos,
   },
+  preloadedState: getPreloadState(),
 });
+
+store.subscribe(
+  debounce<[], () => void>(() => {
+    storageRepoService.saveRepo(store.getState().repos.repos);
+  }, 800)
+);
 
 export type AppDispatch = typeof store.dispatch;
 

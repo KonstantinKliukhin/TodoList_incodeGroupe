@@ -1,12 +1,9 @@
-import { FC, useState, ChangeEventHandler, FormEventHandler } from "react";
-import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 import { GithubApiURL } from "../../common/types/githubApiURL";
 import { useAppDispatch } from "../../redux/hooks";
-import {
-  fetchAllIssues,
-  setCurrentUserRepo,
-} from "../../redux/slices/currentRepoSlice";
+import { fetchRepo } from "../../redux/slices/reposSlice";
 import { getRoutesFromURL } from "./../../utils";
+import { FC, useState, ChangeEventHandler, FormEventHandler } from "react";
+import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 
 const TodoURLInput: FC = () => {
   const [currentURL, setCurrentURL] = useState<string>("");
@@ -30,12 +27,10 @@ const TodoURLInput: FC = () => {
 
       const options = {
         owner: routes[0],
-        repo: routes[1],
+        repoName: routes[1],
       };
 
-      dispatch(fetchAllIssues(options));
-
-      dispatch(setCurrentUserRepo(options));
+      dispatch(fetchRepo(options));
     } else {
       setURLInputError(true);
     }
@@ -58,7 +53,7 @@ const TodoURLInput: FC = () => {
           className="position-absolute top-100"
           type="invalid"
         >
-          Invalid URL, example: "facebook/react"
+          Invalid path, example: "facebook/react"
         </FormControl.Feedback>
       </InputGroup>
       <Button size="sm" className="px-4" variant="primary" type="submit">
