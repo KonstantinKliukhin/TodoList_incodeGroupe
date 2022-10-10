@@ -1,6 +1,6 @@
-import { Loading } from "../../common/types/loadingState";
 import { useAppSelector } from "../../redux/hooks";
-import { IRepo } from "./../../common/types/repository";
+import { Loading } from "../../types/loadingState";
+import { IRepo } from "../../types/repository";
 import repoSelector from "./../../redux/selectors/repoSelector";
 import setContent from "./../../utils/setContent";
 import getStarsNumberText from "./getStarsNumberText";
@@ -20,6 +20,7 @@ const RepoRating: FC = () => {
     return (
       <>
         <svg
+          data-testid="repo-rating-svg"
           fill="#e3b341"
           aria-hidden="true"
           height="25"

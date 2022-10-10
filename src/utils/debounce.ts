@@ -1,5 +1,5 @@
 export default function debounce<
-  CallbackArgs extends any[],
+  CallbackArgs extends unknown[],
   Callback extends (...args: CallbackArgs) => void
 >(callback: Callback, wait: number): (...args: CallbackArgs) => void {
   let isActiveTimeout = false;

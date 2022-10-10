@@ -1,6 +1,6 @@
-import { IIssue } from "../../../../../common/types/issue";
-import { Loading } from "../../../../../common/types/loadingState";
-import { IRepo } from "../../../../../common/types/repository";
+import { IIssue } from "../../../../../types/issue";
+import { Loading } from "../../../../../types/loadingState";
+import { IRepo } from "../../../../../types/repository";
 
 export interface IRepoInitialState {
   currentRepoId: number | null;

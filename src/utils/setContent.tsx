@@ -1,5 +1,5 @@
-import { Loading } from "../common/types/loadingState";
-import { AnyReactElement } from "../common/types/reactElements";
+import { Loading } from "../types/loadingState";
+import { AnyReactElement } from "../types/reactElements";
 import { Alert, Spinner } from "react-bootstrap";
 
 export default function setContent<RenderContentArgs = null>(
@@ -11,11 +11,21 @@ export default function setContent<RenderContentArgs = null>(
     case Loading.IDLE:
       return null;
     case Loading.PENDING:
-      return <Spinner animation="border" variant="primary" />;
+      return (
+        <Spinner
+          data-testid="loading-spinner"
+          animation="border"
+          variant="primary"
+        />
+      );
     case Loading.SUCCEEDED:
       return renderContent(renderContentArgs);
     case Loading.FAILED:
-      return <Alert variant="danger">Error!</Alert>;
+      return (
+        <Alert variant="danger" data-testid="error">
+          Error!
+        </Alert>
+      );
     default:
       return;
   }

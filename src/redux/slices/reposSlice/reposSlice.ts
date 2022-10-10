@@ -1,13 +1,14 @@
-import { IIssue, IssueType } from '../../../common/types/issue';
-import { Loading } from '../../../common/types/loadingState';
-import { IRepo } from '../../../common/types/repository';
-import { githubService } from '../../../service';
-import { findIndexById } from './../../../utils';
-import deleteIssue from './common/utils/deleteIssue';
-import insertIssues from './common/utils/insertIssue';
-import { IRepoInitialState } from './common/types/initialState';
-import updateIssueState from './common/utils/updateIssueState';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { githubService } from "../../../service";
+import { IIssue, IssueState } from "../../../types/issue";
+import { Loading } from "../../../types/loadingState";
+import { IRepo } from "../../../types/repository";
+import { findIndexById } from "./../../../utils";
+import { IRepoInitialState } from "./common/types/initialState";
+import deleteIssue from "./common/utils/deleteIssue";
+import insertIssues from "./common/utils/insertIssue";
+import pushIssue from "./common/utils/pushIssue";
+import updateIssue from "./common/utils/updateIssue";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: IRepoInitialState = {
   currentRepoId: null,
@@ -16,27 +17,34 @@ const initialState: IRepoInitialState = {
   repos: [],
 };
 
-type FetchRepoArguments = Pick<Parameters<typeof githubService.getRepo>[0], 'owner' | 'repoName'>;
+type FetchRepoArguments = Pick<
+  Parameters<typeof githubService.getRepo>[0],
+  "owner" | "repoName"
+>;
 
 export const fetchRepo = createAsyncThunk<
   IRepo,
   FetchRepoArguments,
   {
-    rejectValue: unknown;
+    rejectValue: FetchRepoArguments & { error: unknown };
   }
->('currentRepo/fetchRepo', async ({ owner, repoName }, { rejectWithValue }) => {
+>("repos/fetchRepo", async ({ owner, repoName }, { rejectWithValue }) => {
   try {
     return await githubService.getRepo({
       owner,
       repoName,
     });
   } catch (e) {
-    return rejectWithValue(e);
+    return rejectWithValue({
+      owner,
+      repoName,
+      error: e,
+    });
   }
 });
 
 const reposSlice = createSlice({
-  name: 'repos',
+  name: "repos",
   initialState,
   reducers: {
     currentIssueSet: (state, action: PayloadAction<IIssue>) => {
@@ -45,41 +53,40 @@ const reposSlice = createSlice({
     currentIssueDeleted: (state) => {
       state.currentIssue = null;
     },
-    issueToRepoAdded: (state, action: PayloadAction<IssueType>) => {
-      if (!state.currentRepoId || !state.currentIssue) return;
+    issueToRepoAdded: (state, action: PayloadAction<IssueState>) => {
+      if (state.currentRepoId === null || !state.currentIssue) return;
 
-      const currentRepoIndex = findIndexById<IRepo>(state.repos, state.currentRepoId);
+      const currentRepoIndex = findIndexById<IRepo>(
+        state.repos,
+        state.currentRepoId
+      );
 
       deleteIssue(state, currentRepoIndex);
 
-      updateIssueState(action.payload, state.currentIssue);
+      updateIssue(action.payload, state.currentIssue);
 
-      switch (action.payload) {
-        case IssueType.OPEN:
-          state.repos[currentRepoIndex].openIssues.push(state.currentIssue);
-          break;
-        case IssueType.INPROGRESS:
-          state.repos[currentRepoIndex].inProgressIssues.push(state.currentIssue);
-          break;
-        case IssueType.CLOSED:
-          state.repos[currentRepoIndex].closedIssues.push(state.currentIssue);
-          break;
-        default: {
-          const exhaustiveCheck: never = action.payload;
-          throw new Error(exhaustiveCheck);
-        }
-      }
+      pushIssue(
+        action.payload,
+        state.repos[currentRepoIndex],
+        state.currentIssue
+      );
 
       state.currentIssue = null;
     },
-    issueOrderChanged: (state, action: PayloadAction<IIssue & { displacement: number }>) => {
+    issueOrderChanged: (
+      state,
+      action: PayloadAction<IIssue & { displacement: number }>
+    ) => {
       if (!state.currentRepoId || !state.currentIssue) return;
 
-      const currentRepoIndex = findIndexById<IRepo>(state.repos, state.currentRepoId);
+      const currentRepoIndex = findIndexById<IRepo>(
+        state.repos,
+        state.currentRepoId
+      );
 
       deleteIssue(state, currentRepoIndex);
 
-      updateIssueState(action.payload.state, state.currentIssue);
+      updateIssue(action.payload.state, state.currentIssue);
 
       const { displacement, ...issueWithNewIndex } = action.payload;
 
@@ -112,13 +119,30 @@ const reposSlice = createSlice({
         }
       })
       .addCase(fetchRepo.rejected, (state, action) => {
+        if (!action.payload) return;
+        const { owner, repoName } = action.payload;
+
+        const currentRepo = state.repos.find((repo) => {
+          return repo.repoName === repoName && repo.owner === owner;
+        });
+
+        if (currentRepo) {
+          state.currentRepoId = currentRepo.id;
+          state.currentRepoLoadingStatus = Loading.SUCCEEDED;
+          return;
+        }
+
         state.currentRepoLoadingStatus = Loading.FAILED;
-        console.error(action.payload);
       });
   },
 });
 
 export const {
   reducer,
-  actions: { issueOrderChanged, currentIssueSet, currentIssueDeleted, issueToRepoAdded },
+  actions: {
+    issueOrderChanged,
+    currentIssueSet,
+    currentIssueDeleted,
+    issueToRepoAdded,
+  },
 } = reposSlice;

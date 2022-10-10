@@ -1,15 +1,15 @@
-import { Loading } from "../../common/types/loadingState";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { issueToRepoAdded } from "../../redux/slices/reposSlice";
+import { IIssue, IssueState } from "../../types/issue";
+import { Loading } from "../../types/loadingState";
 import { setContent } from "../../utils";
 import TodoCard from "../todoCard/TodoCard";
-import { IIssue, IssueType } from "./../../common/types/issue";
 import getTitleAndSelectorByIssue from "./getTitleAndSelectorByIssue";
 import { FC, DragEvent } from "react";
 import { Stack } from "react-bootstrap";
 
 interface ITodosListProps {
-  type: IssueType;
+  type: IssueState;
 }
 
 const TodosList: FC<ITodosListProps> = ({ type }) => {
@@ -33,7 +33,7 @@ const TodosList: FC<ITodosListProps> = ({ type }) => {
 
   const renderTodoCard = () => {
     return todos.map((todo) => {
-      return <TodoCard key={todo.id} todo={todo} todos={todos} />;
+      return <TodoCard key={todo.id} todo={todo} />;
     });
   };
 
@@ -41,6 +41,7 @@ const TodosList: FC<ITodosListProps> = ({ type }) => {
     <div>
       <h3 className="h3 text-center">{title}</h3>
       <Stack
+        data-testid="todo-card-list"
         onDragOver={(e: DragEvent<HTMLElement>) => {
           e.preventDefault();
         }}

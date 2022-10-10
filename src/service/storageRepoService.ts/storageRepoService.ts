@@ -1,5 +1,5 @@
-import { LocalStorageKeys } from "../../common/types/localStorageKeys";
-import { IRepo } from "../../common/types/repository";
+import { LocalStorageKeys } from "../../types/localStorageKeys";
+import { IRepo } from "../../types/repository";
 import { IStorageRepoService } from "../common/types/storageRepoService";
 import localStorageService from "../localStorageService/localStorageService";
 import { IStorageService } from "./../common/types/storageService";

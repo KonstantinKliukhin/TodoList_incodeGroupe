@@ -1,7 +1,7 @@
-import { GithubApiURL } from "../../common/types/githubApiURL";
-import { IIssue, IssueType } from "../../common/types/issue";
-import { IRepo } from "../../common/types/repository";
-import { IUser } from "../../common/types/user";
+import { GithubApiURL } from "../../types/githubApiURL";
+import { IIssue, IssueState } from "../../types/issue";
+import { IRepo } from "../../types/repository";
+import { IUser } from "../../types/user";
 import { ApiRequest } from "../common/types/apiRequest";
 import { FetchService } from "../common/types/fetchService";
 import { IReposService } from "../common/types/reposService";
@@ -106,15 +106,15 @@ class GithubService extends FetchService implements IReposService {
   private readonly normalizeIssue = (issue: IGithubIssue): IIssue => {
     let state;
 
-    if (issue.state === IssueType.CLOSED) {
-      state = IssueType.CLOSED;
+    if (issue.state === IssueState.CLOSED) {
+      state = IssueState.CLOSED;
     } else if (
-      issue.state === IssueType.OPEN &&
+      issue.state === IssueState.OPEN &&
       (issue.assignee || issue.assignees?.length)
     ) {
-      state = IssueType.INPROGRESS;
+      state = IssueState.INPROGRESS;
     } else {
-      state = IssueType.OPEN;
+      state = IssueState.OPEN;
     }
 
     return {
@@ -141,19 +141,19 @@ class GithubService extends FetchService implements IReposService {
     return {
       openIssues: allIssues.filter((issue) => {
         return (
-          issue.state === IssueType.OPEN &&
+          issue.state === IssueState.OPEN &&
           !issue.assignee &&
           !issue.assignees?.length
         );
       }),
       inProgressIssues: allIssues.filter((issue) => {
         return (
-          issue.state === IssueType.OPEN &&
+          issue.state === IssueState.OPEN &&
           (issue.assignee || issue.assignees?.length)
         );
       }),
       closedIssues: allIssues.filter((issue) => {
-        return issue.state === IssueType.CLOSED;
+        return issue.state === IssueState.CLOSED;
       }),
     };
   };

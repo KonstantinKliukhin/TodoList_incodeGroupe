@@ -1,3 +1,3 @@
-import { IIssue, IssueType } from '../../../../../common/types/issue';
+import { IIssue, IssueState } from "../../../../../types/issue";
 
-export type UpdateIssueStateType = (issueType: IssueType, issue: IIssue) => void;
+export type UpdateIssueType = (issueState: IssueState, issue: IIssue) => void;

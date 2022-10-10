@@ -1,4 +1,4 @@
-import { IssueType } from "../../common/types/issue";
+import { IssueState } from "../../types/issue";
 import TodosList from "../todosList/TodosList";
 import { FC } from "react";
 import { Col, Container, Row } from "react-bootstrap";
@@ -8,13 +8,13 @@ const TodosLayout: FC = () => {
     <Container>
       <Row>
         <Col>
-          <TodosList type={IssueType.OPEN} />
+          <TodosList type={IssueState.OPEN} />
         </Col>
         <Col>
-          <TodosList type={IssueType.INPROGRESS} />
+          <TodosList type={IssueState.INPROGRESS} />
         </Col>
         <Col>
-          <TodosList type={IssueType.CLOSED} />
+          <TodosList type={IssueState.CLOSED} />
         </Col>
       </Row>
     </Container>

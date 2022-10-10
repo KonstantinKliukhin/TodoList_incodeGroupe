@@ -1,7 +1,8 @@
-import { GithubApiURL } from "../../common/types/githubApiURL";
 import { useAppDispatch } from "../../redux/hooks";
 import { fetchRepo } from "../../redux/slices/reposSlice";
+import { GithubApiURL } from "../../types/githubApiURL";
 import { getRoutesFromURL } from "./../../utils";
+import validateTodoInputData from "./validateTodoInputData";
 import { FC, useState, ChangeEventHandler, FormEventHandler } from "react";
 import { Form, Button, InputGroup, FormControl } from "react-bootstrap";
 
@@ -20,14 +21,21 @@ const TodoURLInput: FC = () => {
 
     const fullURL = GithubApiURL.BASEURL + currentURL;
 
-    const routes = getRoutesFromURL(fullURL);
+    const pathes = getRoutesFromURL(fullURL);
 
-    if (routes?.length === 2) {
+    if (!pathes) {
+      setURLInputError(true);
+      return;
+    }
+
+    const isValidInputData = validateTodoInputData(pathes);
+
+    if (isValidInputData) {
       setURLInputError(false);
 
       const options = {
-        owner: routes[0],
-        repoName: routes[1],
+        owner: pathes[0],
+        repoName: pathes[1],
       };
 
       dispatch(fetchRepo(options));
@@ -37,12 +45,17 @@ const TodoURLInput: FC = () => {
   };
 
   return (
-    <Form onSubmit={onURLFormSubmit} className="d-flex gap-3 mt-3">
+    <Form
+      data-testid="url-form"
+      onSubmit={onURLFormSubmit}
+      className="d-flex gap-3 mt-3"
+    >
       <InputGroup hasValidation>
         <InputGroup.Text className="px-2" id="prevTodoURLInput">
           https://github.com/
         </InputGroup.Text>
         <Form.Control
+          data-testid="url-input"
           id="todoURLInput"
           value={currentURL}
           onChange={onChangeURL}
@@ -50,6 +63,7 @@ const TodoURLInput: FC = () => {
           isInvalid={URLInputError}
         />
         <FormControl.Feedback
+          data-testid="url-input-error"
           className="position-absolute top-100"
           type="invalid"
         >

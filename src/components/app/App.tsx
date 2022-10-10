@@ -1,17 +1,19 @@
+import ErrorBoundary from "../errorBoundary/ErrorBoundary";
+import TodoBreadCrumb from "../repoLinks/repoLinks";
 import RepoRating from "../repoRating/RepoRating";
 import TodoURLInput from "../todoURLInput/TodoURLInput";
 import TodosLayout from "../todosLayout/TodosLayout";
-import TodoBreadCrumb from "./../todoBreadcrumb/TodoBreadCrumb";
 import { FC } from "react";
-import { Col, Row } from "react-bootstrap";
-import Container from "react-bootstrap/esm/Container";
+import { Col, Row, Container } from "react-bootstrap";
 
 const App: FC = () => {
   return (
-    <Container>
+    <Container data-testid="app-container">
       <Row>
         <Col>
-          <TodoURLInput />
+          <ErrorBoundary>
+            <TodoURLInput />
+          </ErrorBoundary>
         </Col>
       </Row>
       <Row xs="auto" className="my-4">

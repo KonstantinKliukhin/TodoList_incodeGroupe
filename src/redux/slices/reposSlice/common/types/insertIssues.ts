@@ -1,5 +1,5 @@
-import { IIssue } from '../../../../../common/types/issue';
-import { IRepo } from '../../../../../common/types/repository';
+import { IIssue } from "../../../../../types/issue";
+import { IRepo } from "../../../../../types/repository";
 
 export type InsertIssuesType = (
   repo: IRepo,

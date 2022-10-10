@@ -1,4 +1,4 @@
-import { IssueType } from "../../../../../common/types/issue";
+import { IssueState } from "../../../../../types/issue";
 import { IGithubMilestone } from "./githubMilestone";
 import { IGithubPullRequest } from "./githubPullRequest";
 import { IGithubUser } from "./githubUser";
@@ -13,7 +13,7 @@ export interface IGithubIssueLabel {
   default: boolean;
 }
 
-export type GithubIssueState = IssueType.OPEN | IssueType.CLOSED;
+export type GithubIssueState = IssueState.OPEN | IssueState.CLOSED;
 
 export interface IGithubIssue {
   id: number;

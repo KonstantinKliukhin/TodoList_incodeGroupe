@@ -1,17 +1,16 @@
-import { IIssue } from "../../common/types/issue";
 import { useAppDispatch } from "../../redux/hooks";
 import {
   issueOrderChanged,
   currentIssueSet,
   currentIssueDeleted,
 } from "../../redux/slices/reposSlice";
+import { IIssue } from "../../types/issue";
 import getCardTimeText from "./getCardTime";
 import { FC, DragEventHandler, useRef, DragEvent } from "react";
 import { Card } from "react-bootstrap";
 
 interface TodoCardProps {
   todo: IIssue;
-  todos: IIssue[];
 }
 
 const TodoCard: FC<TodoCardProps> = ({ todo }) => {
@@ -88,6 +87,7 @@ const TodoCard: FC<TodoCardProps> = ({ todo }) => {
 
   return (
     <Card
+      data-testid={`todo-card-${todo.state}`}
       ref={cardRef}
       className="cursor-grab"
       draggable={true}

@@ -1,4 +1,4 @@
-import { IIssue } from "../../common/types/issue";
+import { IIssue } from "../../types/issue";
 
 function getDifferenceInDays(date: string) {
   const pastDate = new Date(date).getTime();

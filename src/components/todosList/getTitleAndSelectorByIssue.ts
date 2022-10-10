@@ -1,10 +1,10 @@
-import { IIssue, IssueType } from "../../common/types/issue";
 import {
   inProgressIssuesSelector,
   openedIssuesSelector,
   closedIssuesSelector,
 } from "../../redux/selectors/issuesSelectors";
 import { RootState } from "../../redux/store";
+import { IIssue, IssueState } from "../../types/issue";
 
 type getTitleAndSelectorByIssueReturnType = {
   todoSelector: (state: RootState) => IIssue[];
@@ -12,25 +12,25 @@ type getTitleAndSelectorByIssueReturnType = {
 };
 
 export default function getTitleAndSelectorByIssue(
-  type: IssueType
+  type: IssueState
 ): getTitleAndSelectorByIssueReturnType {
   switch (type) {
-    case IssueType.OPEN:
+    case IssueState.OPEN:
       return {
         todoSelector: openedIssuesSelector,
         title: "ToDo",
       };
-    case IssueType.INPROGRESS:
+    case IssueState.INPROGRESS:
       return {
         todoSelector: inProgressIssuesSelector,
         title: "In Progress",
       };
-    case IssueType.CLOSED:
+    case IssueState.CLOSED:
       return {
         todoSelector: closedIssuesSelector,
         title: "Done",
       };
     default:
-      throw new Error("Unexpected IssueType");
+      throw new Error(`Unexpected IssueState: ${type}`);
   }
 }

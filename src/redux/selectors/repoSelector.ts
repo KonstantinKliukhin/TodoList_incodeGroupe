@@ -1,6 +1,6 @@
+import { IRepo } from "../../types/repository";
 import { findElementById } from "../../utils";
 import { RootState } from "../store";
-import { IRepo } from "./../../common/types/repository";
 
 export default function repoSelector(state: RootState): IRepo | null {
   if (!state.repos.currentRepoId) return null;

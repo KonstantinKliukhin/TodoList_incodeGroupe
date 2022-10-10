@@ -1,6 +1,6 @@
-import { IssueType } from '../../../../../common/types/issue';
-import { InsertIssuesType } from '../types/insertIssues';
-import findNewIssueIndex from './findNewIssueIndex';
+import { IssueState } from "../../../../../types/issue";
+import { InsertIssuesType } from "../types/insertIssues";
+import findNewIssueIndex from "./findNewIssueIndex";
 
 const insertIssues: InsertIssuesType = (
   repo,
@@ -10,18 +10,30 @@ const insertIssues: InsertIssuesType = (
 ) => {
   let newIssueIndex: number;
   switch (issueWithNewIndex.state) {
-    case IssueType.OPEN:
-      newIssueIndex = findNewIssueIndex(repo.openIssues, issueWithNewIndex.id, displacement);
+    case IssueState.OPEN:
+      newIssueIndex = findNewIssueIndex(
+        repo.openIssues,
+        issueWithNewIndex.id,
+        displacement
+      );
 
       repo.openIssues.splice(newIssueIndex, 0, currentIssue);
       break;
-    case IssueType.INPROGRESS:
-      newIssueIndex = findNewIssueIndex(repo.inProgressIssues, issueWithNewIndex.id, displacement);
+    case IssueState.INPROGRESS:
+      newIssueIndex = findNewIssueIndex(
+        repo.inProgressIssues,
+        issueWithNewIndex.id,
+        displacement
+      );
 
       repo.inProgressIssues.splice(newIssueIndex, 0, currentIssue);
       break;
-    case IssueType.CLOSED:
-      newIssueIndex = findNewIssueIndex(repo.closedIssues, issueWithNewIndex.id, displacement);
+    case IssueState.CLOSED:
+      newIssueIndex = findNewIssueIndex(
+        repo.closedIssues,
+        issueWithNewIndex.id,
+        displacement
+      );
 
       repo.closedIssues.splice(newIssueIndex, 0, currentIssue);
       break;
@@ -30,6 +42,6 @@ const insertIssues: InsertIssuesType = (
       throw new Error(exhaustiveCheck);
     }
   }
-}
+};
 
 export default insertIssues;

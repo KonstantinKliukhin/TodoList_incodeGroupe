@@ -1,5 +1,5 @@
 import { ApiRequest } from './apiRequest';
-import { IRepo } from './../../../common/types/repository';
+import { IRepo } from '../../../types/repository';
 
 export interface IGetRepoOptions {
   owner: string;
