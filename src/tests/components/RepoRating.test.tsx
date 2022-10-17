@@ -1,71 +1,63 @@
-import RepoRating from "../../components/repoRating/RepoRating";
-import { fetchRepo } from "../../redux/slices/reposSlice/reposSlice";
-import { setupStore } from "../../redux/store";
+import { act } from '@testing-library/react'
+
+import RepoRating from '../../components/repoRating/RepoRating'
+import { fetchRepo } from '../../redux/slices/reposSlice/reposSlice'
+import { setupStore } from '../../redux/store'
 import {
-  mockFetchingRepo,
   correctFetchOptions,
   inCorrectOptionsToFetch,
-} from "../helpers/mockFetchingRepo";
-import renderWithProviders from "../helpers/renderWithProviders";
-import { act } from "@testing-library/react";
+  mockFetchingRepo,
+} from '../helpers/mockFetchingRepo'
+import renderWithProviders from '../helpers/renderWithProviders'
 
-mockFetchingRepo();
+mockFetchingRepo()
 
-describe("TEST REPORATING", () => {
-  test("TEST LINKS APPEARES AFTER THE DATA IS FETCHED", async () => {
-    const store = setupStore();
+describe('TEST REPORATING', () => {
+  test('TEST LINKS APPEARES AFTER THE DATA IS FETCHED', async () => {
+    const store = setupStore()
 
-    const { queryByTestId, findByTestId } = renderWithProviders(
-      <RepoRating />,
-      { store }
-    );
+    const { queryByTestId, findByTestId } = renderWithProviders(<RepoRating />, { store })
 
-    expect(queryByTestId("repo-rating-svg")).not.toBeInTheDocument();
+    expect(queryByTestId('repo-rating-svg')).not.toBeInTheDocument()
 
     await act(async () => {
-      await store.dispatch(fetchRepo(correctFetchOptions));
-    });
+      await store.dispatch(fetchRepo(correctFetchOptions))
+    })
 
-    const repoRatingSvg = await findByTestId("repo-rating-svg");
+    const repoRatingSvg = await findByTestId('repo-rating-svg')
 
-    expect(repoRatingSvg).toBeInTheDocument();
-  });
+    expect(repoRatingSvg).toBeInTheDocument()
+  })
 
-  test("TEST LOADING APPEARES AFTER THE DATA IS REQUESTED", async () => {
-    const store = setupStore();
+  test('TEST LOADING APPEARES AFTER THE DATA IS REQUESTED', async () => {
+    const store = setupStore()
 
-    const { queryByTestId, findByTestId } = renderWithProviders(
-      <RepoRating />,
-      { store }
-    );
+    const { queryByTestId, findByTestId } = renderWithProviders(<RepoRating />, { store })
 
-    expect(queryByTestId("loading-spinner")).not.toBeInTheDocument();
+    expect(queryByTestId('loading-spinner')).not.toBeInTheDocument()
 
     act(() => {
-      store.dispatch(fetchRepo(inCorrectOptionsToFetch));
-    });
+      store.dispatch(fetchRepo(inCorrectOptionsToFetch))
+    })
 
-    const loadingSpinner = await findByTestId("loading-spinner");
+    const loadingSpinner = await findByTestId('loading-spinner')
 
-    expect(loadingSpinner).toBeInTheDocument();
-  });
+    expect(loadingSpinner).toBeInTheDocument()
+  })
 
-  test("TEST ERROR APPEARES AFTER THE ERROR IS RECEIVED", async () => {
-    const store = setupStore();
+  test('TEST ERROR APPEARES AFTER THE ERROR IS RECEIVED', async () => {
+    const store = setupStore()
 
-    const { queryByTestId, findByTestId } = renderWithProviders(
-      <RepoRating />,
-      { store }
-    );
+    const { queryByTestId, findByTestId } = renderWithProviders(<RepoRating />, { store })
 
-    expect(queryByTestId("error")).toBeNull();
+    expect(queryByTestId('error')).toBeNull()
 
     await act(async () => {
-      await store.dispatch(fetchRepo(inCorrectOptionsToFetch));
-    });
+      await store.dispatch(fetchRepo(inCorrectOptionsToFetch))
+    })
 
-    const error = await findByTestId("error");
+    const error = await findByTestId('error')
 
-    expect(error).toBeInTheDocument();
-  });
-});
+    expect(error).toBeInTheDocument()
+  })
+})

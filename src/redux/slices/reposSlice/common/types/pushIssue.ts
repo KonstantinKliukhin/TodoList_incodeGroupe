@@ -1,8 +1,8 @@
-import { IIssue, IssueState } from "../../../../../types/issue";
-import { IRepo } from "../../../../../types/repository";
+import { IIssue, IssueState } from '../../../../../types/issue'
+import { IRepo } from '../../../../../types/repository'
 
 export type PushIssueType = (
   issueState: IssueState,
   currentRepo: IRepo,
-  currentIssue: IIssue
-) => void;
+  currentIssue: IIssue,
+) => void

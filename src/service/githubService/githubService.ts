@@ -1,120 +1,108 @@
-import { GithubApiURL } from "../../types/githubApiURL";
-import { IIssue, IssueState } from "../../types/issue";
-import { IRepo } from "../../types/repository";
-import { IUser } from "../../types/user";
-import { ApiRequest } from "../common/types/apiRequest";
-import { FetchService } from "../common/types/fetchService";
-import { IReposService } from "../common/types/reposService";
-import { IGithubIssue } from "./common/types/entyties/githubIssue";
-import { IGithubRepository } from "./common/types/entyties/githubRepository";
-import { IGithubUser } from "./common/types/entyties/githubUser";
-import { IRepoInfo } from "./common/types/entyties/repoInfo";
+import { GithubApiURL } from '../../types/githubApiURL'
+import { IIssue, IssueState } from '../../types/issue'
+import { IRepo } from '../../types/repository'
+import { IUser } from '../../types/user'
+import { ApiRequest } from '../common/types/apiRequest'
+import { FetchService } from '../common/types/fetchService'
+import { IReposService } from '../common/types/reposService'
+import { IGithubIssue } from './common/types/entyties/githubIssue'
+import { IGithubRepository } from './common/types/entyties/githubRepository'
+import { IGithubUser } from './common/types/entyties/githubUser'
+import { IRepoInfo } from './common/types/entyties/repoInfo'
 
 interface IGetIssuesOptions {
-  owner: string;
-  repoName: string;
-  state: "all" | "open" | "closed";
+  owner: string
+  repoName: string
+  state: 'all' | 'open' | 'closed'
 }
 
 type GetAllIssuesType = ApiRequest<
   IGetIssuesOptions,
-  Pick<IRepo, "closedIssues" | "inProgressIssues" | "openIssues">
->;
+  Pick<IRepo, 'closedIssues' | 'inProgressIssues' | 'openIssues'>
+>
 
 export interface IGetRepoInfoOptions {
-  owner: string;
-  repoName: string;
+  owner: string
+  repoName: string
 }
 
-type GetRepoInfoType = ApiRequest<IGetRepoInfoOptions, IRepoInfo>;
+type GetRepoInfoType = ApiRequest<IGetRepoInfoOptions, IRepoInfo>
 
 interface IGetRepoOptions {
-  owner: string;
-  repoName: string;
+  owner: string
+  repoName: string
 }
 
-export type GetRepoType = ApiRequest<IGetRepoOptions, IRepo>;
+export type GetRepoType = ApiRequest<IGetRepoOptions, IRepo>
 
 class GithubService extends FetchService implements IReposService {
-  authToken: string;
+  authToken: string
 
   constructor(authToken: string) {
-    super();
+    super()
 
     if (!authToken) {
-      throw new Error("No auth token provided");
+      throw new Error('No auth token provided')
     }
 
-    this.authToken = authToken;
+    this.authToken = authToken
   }
 
-  private readonly getAllIssues: GetAllIssuesType = async ({
-    owner,
-    repoName,
-    state,
-  }) => {
+  private readonly getAllIssues: GetAllIssuesType = async ({ owner, repoName, state }) => {
     const url = new URL(
-      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}/${GithubApiURL.ISSUEPATH}`
-    );
+      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}/${GithubApiURL.ISSUEPATH}`,
+    )
 
-    url.searchParams.append("state", state);
+    url.searchParams.append('state', state)
     const res = await this.request<IGithubIssue[]>(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        accept: "application/vnd.github+json",
+        accept: 'application/vnd.github+json',
         Authorization: this.authToken,
       },
-    });
+    })
 
-    return this.normalizeIssues(res);
-  };
+    return this.normalizeIssues(res)
+  }
 
-  private readonly getRepoInfo: GetRepoInfoType = async ({
-    owner,
-    repoName,
-  }) => {
-    const url = new URL(
-      `${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}`
-    );
+  private readonly getRepoInfo: GetRepoInfoType = async ({ owner, repoName }) => {
+    const url = new URL(`${GithubApiURL.BASEURL}${GithubApiURL.REPOSPATH}/${owner}/${repoName}`)
 
     const res = await this.request<IGithubRepository>(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
-        accept: "application/vnd.github+json",
+        accept: 'application/vnd.github+json',
         Authorization: this.authToken,
       },
-    });
+    })
 
-    return this.normalizeRepoInfo(res);
-  };
+    return this.normalizeRepoInfo(res)
+  }
 
   getRepo: GetRepoType = async ({ owner, repoName }) => {
     const issues = await this.getAllIssues({
       owner,
       repoName,
-      state: "all",
-    });
+      state: 'all',
+    })
 
-    const repoInfo = await this.getRepoInfo({ owner, repoName });
+    const repoInfo = await this.getRepoInfo({ owner, repoName })
 
     return {
       ...repoInfo,
       ...issues,
-    };
-  };
+    }
+  }
 
   private readonly normalizeIssue = (issue: IGithubIssue): IIssue => {
-    let state;
+    let state
 
     if (issue.state === IssueState.CLOSED) {
-      state = IssueState.CLOSED;
-    } else if (
-      issue.state === IssueState.OPEN &&
-      (issue.assignee || issue.assignees?.length)
-    ) {
-      state = IssueState.INPROGRESS;
+      state = IssueState.CLOSED
+    } else if (issue.state === IssueState.OPEN && (issue.assignee || issue.assignees?.length)) {
+      state = IssueState.INPROGRESS
     } else {
-      state = IssueState.OPEN;
+      state = IssueState.OPEN
     }
 
     return {
@@ -127,43 +115,34 @@ class GithubService extends FetchService implements IReposService {
       user: this.normalizeUser(issue.user),
       state,
       assignee: issue.assignee ? this.normalizeUser(issue.assignee) : undefined,
-      assignees: issue.assignees?.map((assignee) =>
-        this.normalizeUser(assignee)
-      ),
-    };
-  };
+      assignees: issue.assignees?.map((assignee) => this.normalizeUser(assignee)),
+    }
+  }
 
   private readonly normalizeIssues = (issues: IGithubIssue[]) => {
     const allIssues = issues.map((issue) => {
-      return this.normalizeIssue(issue);
-    });
+      return this.normalizeIssue(issue)
+    })
 
     return {
       openIssues: allIssues.filter((issue) => {
-        return (
-          issue.state === IssueState.OPEN &&
-          !issue.assignee &&
-          !issue.assignees?.length
-        );
+        return issue.state === IssueState.OPEN && !issue.assignee && !issue.assignees?.length
       }),
       inProgressIssues: allIssues.filter((issue) => {
-        return (
-          issue.state === IssueState.OPEN &&
-          (issue.assignee || issue.assignees?.length)
-        );
+        return issue.state === IssueState.OPEN && (issue.assignee || issue.assignees?.length)
       }),
       closedIssues: allIssues.filter((issue) => {
-        return issue.state === IssueState.CLOSED;
+        return issue.state === IssueState.CLOSED
       }),
-    };
-  };
+    }
+  }
 
   private readonly normalizeUser = (user: IGithubUser): IUser => {
     return {
       id: user.id,
       name: user.login,
-    };
-  };
+    }
+  }
 
   private readonly normalizeRepoInfo = (repo: IGithubRepository): IRepoInfo => {
     return {
@@ -171,10 +150,10 @@ class GithubService extends FetchService implements IReposService {
       starsNumber: repo.stargazers_count,
       repoName: repo.name,
       owner: this.normalizeUser(repo.owner).name,
-    };
-  };
+    }
+  }
 }
 
-const githubService = new GithubService(process.env.REACT_APP_GITHUB_API_KEY!);
+const githubService = new GithubService(process.env.REACT_APP_GITHUB_API_KEY!)
 
-export default githubService;
+export default githubService

@@ -1,7 +1,8 @@
-import { IssueState } from "../../types/issue";
-import TodosList from "../todosList/TodosList";
-import { FC } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { FC } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+
+import { IssueState } from '../../types/issue'
+import TodosList from '../todosList/TodosList'
 
 const TodosLayout: FC = () => {
   return (
@@ -18,7 +19,7 @@ const TodosLayout: FC = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default TodosLayout;
+export default TodosLayout

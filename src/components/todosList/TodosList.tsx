@@ -1,59 +1,58 @@
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { issueToRepoAdded } from "../../redux/slices/reposSlice";
-import { IIssue, IssueState } from "../../types/issue";
-import { Loading } from "../../types/loadingState";
-import { setContent } from "../../utils";
-import TodoCard from "../todoCard/TodoCard";
-import getTitleAndSelectorByIssue from "./getTitleAndSelectorByIssue";
-import { FC, DragEvent } from "react";
-import { Stack } from "react-bootstrap";
+import { DragEvent, FC } from 'react'
+import { Stack } from 'react-bootstrap'
+
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { issueToRepoAdded } from '../../redux/slices/reposSlice'
+import { IIssue, IssueState } from '../../types/issue'
+import { Loading } from '../../types/loadingState'
+import { setContent } from '../../utils'
+import TodoCard from '../todoCard/TodoCard'
+import getTitleAndSelectorByIssue from './getTitleAndSelectorByIssue'
 
 interface ITodosListProps {
-  type: IssueState;
+  type: IssueState
 }
 
 const TodosList: FC<ITodosListProps> = ({ type }) => {
-  const { todoSelector, title } = getTitleAndSelectorByIssue(type);
+  const { todoSelector, title } = getTitleAndSelectorByIssue(type)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
-  const todos = useAppSelector<IIssue[]>(todoSelector);
+  const todos = useAppSelector<IIssue[]>(todoSelector)
 
-  const loading = useAppSelector<Loading>(
-    (state) => state.repos.currentRepoLoadingStatus
-  );
+  const loading = useAppSelector<Loading>((state) => state.repos.currentRepoLoadingStatus)
 
   const dropHandler = (e: DragEvent<HTMLElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (todos.length) return;
+    if (todos.length) return
 
-    dispatch(issueToRepoAdded(type));
-  };
+    dispatch(issueToRepoAdded(type))
+  }
 
   const renderTodoCard = () => {
     return todos.map((todo) => {
-      return <TodoCard key={todo.id} todo={todo} />;
-    });
-  };
+      return <TodoCard key={todo.id} todo={todo} />
+    })
+  }
 
   return (
     <div>
-      <h3 className="h3 text-center">{title}</h3>
+      <h3 className='h3 text-center'>{title}</h3>
       <Stack
-        data-testid="todo-card-list"
+        data-testid='todo-card-list'
         onDragOver={(e: DragEvent<HTMLElement>) => {
-          e.preventDefault();
+          e.preventDefault()
         }}
         onDrop={(e) => dropHandler(e)}
-        style={{ height: "500px" }}
-        className="p-3 overflow-auto scroll-bar-hidden border border-3 border-primary bg-secondary rounded"
+        style={{ height: '500px' }}
+        className='p-3 overflow-auto scroll-bar-hidden border border-3 border-primary bg-secondary rounded'
         gap={2}
       >
         {setContent(loading, renderTodoCard)}
       </Stack>
     </div>
-  );
-};
+  )
+}
 
-export default TodosList;
+export default TodosList

@@ -1,95 +1,96 @@
-import { useAppDispatch } from "../../redux/hooks";
+import { DragEvent, DragEventHandler, FC, useRef } from 'react'
+import { Card } from 'react-bootstrap'
+
+import { useAppDispatch } from '../../redux/hooks'
 import {
-  issueOrderChanged,
-  currentIssueSet,
   currentIssueDeleted,
-} from "../../redux/slices/reposSlice";
-import { IIssue } from "../../types/issue";
-import getCardTimeText from "./getCardTime";
-import { FC, DragEventHandler, useRef, DragEvent } from "react";
-import { Card } from "react-bootstrap";
+  currentIssueSet,
+  issueOrderChanged,
+} from '../../redux/slices/reposSlice'
+import { IIssue } from '../../types/issue'
+import getCardTimeText from './getCardTime'
 
 interface TodoCardProps {
-  todo: IIssue;
+  todo: IIssue
 }
 
 const TodoCard: FC<TodoCardProps> = ({ todo }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null)
 
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   const dragStartHandler: DragEventHandler<HTMLElement> = () => {
-    dispatch(currentIssueSet(todo));
-  };
+    dispatch(currentIssueSet(todo))
+  }
 
   const dragLeaveHandler: DragEventHandler<HTMLElement> = () => {
     if (cardRef.current) {
-      cardRef.current.style.boxShadow = "none";
+      cardRef.current.style.boxShadow = 'none'
     }
-  };
+  }
 
   const dragEndHandler: DragEventHandler<HTMLElement> = () => {
     if (cardRef.current) {
-      cardRef.current.style.boxShadow = "none";
+      cardRef.current.style.boxShadow = 'none'
     }
 
-    dispatch(currentIssueDeleted());
-  };
+    dispatch(currentIssueDeleted())
+  }
 
   const dragOverHandler: DragEventHandler<HTMLElement> = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!cardRef.current) return;
+    if (!cardRef.current) return
 
     const distaanceFromTopToCardMiddle =
-      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2;
+      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2
 
-    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY;
+    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY
 
     if (isMouseUpperThanCardMiddle) {
-      cardRef.current.style.boxShadow = "0px -8px 3px #0b5ed7";
+      cardRef.current.style.boxShadow = '0px -8px 3px #0b5ed7'
     } else {
-      cardRef.current.style.boxShadow = "0px 8px 3px #0b5ed7";
+      cardRef.current.style.boxShadow = '0px 8px 3px #0b5ed7'
     }
-  };
+  }
 
   const dropHandler = (e: DragEvent<HTMLElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!cardRef.current) return;
+    if (!cardRef.current) return
 
     const distaanceFromTopToCardMiddle =
-      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2;
+      cardRef.current?.offsetTop + cardRef.current?.offsetHeight / 2
 
-    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY;
+    const isMouseUpperThanCardMiddle = distaanceFromTopToCardMiddle > e.pageY
 
-    let displacement: number;
+    let displacement: number
 
     if (isMouseUpperThanCardMiddle) {
-      displacement = 0;
+      displacement = 0
     } else {
-      displacement = 1;
+      displacement = 1
     }
 
     if (cardRef.current) {
-      cardRef.current.style.boxShadow = "none";
+      cardRef.current.style.boxShadow = 'none'
     }
 
     dispatch(
       issueOrderChanged({
         ...todo,
         displacement,
-      })
-    );
-  };
+      }),
+    )
+  }
 
-  const cardTimeText = getCardTimeText(todo);
+  const cardTimeText = getCardTimeText(todo)
 
   return (
     <Card
       data-testid={`todo-card-${todo.state}`}
       ref={cardRef}
-      className="cursor-grab"
+      className='cursor-grab'
       draggable={true}
       onDragStart={(e) => dragStartHandler(e)}
       onDragLeave={(e) => dragLeaveHandler(e)}
@@ -107,7 +108,7 @@ const TodoCard: FC<TodoCardProps> = ({ todo }) => {
         </Card.Text>
       </Card.Body>
     </Card>
-  );
-};
+  )
+}
 
-export default TodoCard;
+export default TodoCard

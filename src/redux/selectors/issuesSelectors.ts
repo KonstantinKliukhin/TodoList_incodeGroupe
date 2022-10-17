@@ -1,40 +1,37 @@
-import { IIssue } from "../../types/issue";
-import { IRepo } from "../../types/repository";
-import { findElementById } from "../../utils";
-import { RootState } from "../store";
+import { IIssue } from '../../types/issue'
+import { IRepo } from '../../types/repository'
+import { findElementById } from '../../utils'
+import { RootState } from '../store'
 
 function getCurrentRepo(state: RootState): null | IRepo {
-  if (!state.repos.currentRepoId) return null;
+  if (!state.repos.currentRepoId) return null
 
-  const currentRepo = findElementById<IRepo>(
-    state.repos.repos,
-    state.repos.currentRepoId
-  );
+  const currentRepo = findElementById<IRepo>(state.repos.repos, state.repos.currentRepoId)
 
-  if (!currentRepo) return null;
+  if (!currentRepo) return null
 
-  return currentRepo;
+  return currentRepo
 }
 
 export function openedIssuesSelector(state: RootState): IIssue[] {
-  const currentRepo = getCurrentRepo(state);
+  const currentRepo = getCurrentRepo(state)
 
-  if (!currentRepo) return [];
-  return currentRepo.openIssues;
+  if (!currentRepo) return []
+  return currentRepo.openIssues
 }
 
 export function inProgressIssuesSelector(state: RootState): IIssue[] {
-  const currentRepo = getCurrentRepo(state);
+  const currentRepo = getCurrentRepo(state)
 
-  if (!currentRepo) return [];
+  if (!currentRepo) return []
 
-  return currentRepo.inProgressIssues;
+  return currentRepo.inProgressIssues
 }
 
 export function closedIssuesSelector(state: RootState): IIssue[] {
-  const currentRepo = getCurrentRepo(state);
+  const currentRepo = getCurrentRepo(state)
 
-  if (!currentRepo) return [];
+  if (!currentRepo) return []
 
-  return currentRepo.closedIssues;
+  return currentRepo.closedIssues
 }

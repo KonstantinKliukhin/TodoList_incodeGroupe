@@ -1,16 +1,12 @@
 {
-	"env": {
-			"browser": true,
-			"es2021": true
-	},
-	"rules": {
-		"react/react-in-jsx-scope": "off",
-		"camelcase": "error",
-		"spaced-comment": "error",
-		"quotes": ["error", "single"],
-		"no-duplicate-imports": "error",
-		"importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-		"importOrderSeparation": true,
-		"importOrderSortSpecifiers": true
-	}
+  "semi": false,
+  "tabWidth": 2,
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "jsxSingleQuote": true,
+  "bracketSpacing": true,
+	"importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

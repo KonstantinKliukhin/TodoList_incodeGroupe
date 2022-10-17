@@ -1,3 +1,3 @@
 export enum LocalStorageKeys {
-  REPOSITORY = "repository",
+  REPOSITORY = 'repository',
 }

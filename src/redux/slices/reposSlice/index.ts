@@ -5,4 +5,4 @@ export {
   issueOrderChanged,
   issueToRepoAdded,
   fetchRepo,
-} from "./reposSlice";
+} from './reposSlice'

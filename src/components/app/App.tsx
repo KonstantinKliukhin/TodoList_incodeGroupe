@@ -1,14 +1,15 @@
-import ErrorBoundary from "../errorBoundary/ErrorBoundary";
-import TodoBreadCrumb from "../repoLinks/repoLinks";
-import RepoRating from "../repoRating/RepoRating";
-import TodoURLInput from "../todoURLInput/TodoURLInput";
-import TodosLayout from "../todosLayout/TodosLayout";
-import { FC } from "react";
-import { Col, Row, Container } from "react-bootstrap";
+import { FC } from 'react'
+import { Col, Container, Row } from 'react-bootstrap'
+
+import ErrorBoundary from '../errorBoundary/ErrorBoundary'
+import TodoBreadCrumb from '../repoLinks/repoLinks'
+import RepoRating from '../repoRating/RepoRating'
+import TodoURLInput from '../todoURLInput/TodoURLInput'
+import TodosLayout from '../todosLayout/TodosLayout'
 
 const App: FC = () => {
   return (
-    <Container data-testid="app-container">
+    <Container data-testid='app-container'>
       <Row>
         <Col>
           <ErrorBoundary>
@@ -16,7 +17,7 @@ const App: FC = () => {
           </ErrorBoundary>
         </Col>
       </Row>
-      <Row xs="auto" className="my-4">
+      <Row xs='auto' className='my-4'>
         <Col>
           <TodoBreadCrumb />
         </Col>
@@ -30,7 +31,7 @@ const App: FC = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default App;
+export default App

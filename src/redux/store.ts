@@ -1,47 +1,48 @@
-import { storageRepoService } from "../service";
-import debounce from "./../utils/debounce";
-import getPreloadState from "./preloadState";
-import { reducer as repos } from "./slices/reposSlice";
 import {
-  configureStore,
-  ThunkAction,
   Action,
   PreloadedState,
+  ThunkAction,
   combineReducers,
-} from "@reduxjs/toolkit";
+  configureStore,
+} from '@reduxjs/toolkit'
+
+import { storageRepoService } from '../service'
+import debounce from './../utils/debounce'
+import getPreloadState from './preloadState'
+import { reducer as repos } from './slices/reposSlice'
 
 const rootReducer = combineReducers({
   repos,
-});
+})
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
   return configureStore({
     middleware: (gDM) => gDM({ serializableCheck: false }),
-    devTools: process.env.NODE_ENV !== "production",
+    devTools: process.env.NODE_ENV !== 'production',
     reducer: rootReducer,
     preloadedState: preloadedState,
-  });
+  })
 }
 
-const preloadedState = getPreloadState();
+const preloadedState = getPreloadState()
 
-export const store = setupStore(preloadedState);
+export const store = setupStore(preloadedState)
 
 store.subscribe(
   debounce<[], () => void>(() => {
-    storageRepoService.saveRepo(store.getState().repos.repos);
-  }, 800)
-);
+    storageRepoService.saveRepo(store.getState().repos.repos)
+  }, 800),
+)
 
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = typeof store.dispatch
 
-export type AppStore = ReturnType<typeof setupStore>;
+export type AppStore = ReturnType<typeof setupStore>
 
-export type RootState = ReturnType<typeof rootReducer>;
+export type RootState = ReturnType<typeof rootReducer>
 
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,
   unknown,
   Action<string>
->;
+>

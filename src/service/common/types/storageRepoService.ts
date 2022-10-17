@@ -1,6 +1,6 @@
-import { IRepo } from "../../../types/repository";
+import { IRepo } from '../../../types/repository'
 
 export interface IStorageRepoService {
-  saveRepo: (value: IRepo[]) => boolean;
-  getRepos: () => IRepo[] | null;
+  saveRepo: (value: IRepo[]) => boolean
+  getRepos: () => IRepo[] | null
 }

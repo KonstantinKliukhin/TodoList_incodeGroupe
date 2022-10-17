@@ -1,67 +1,62 @@
-import TodoCard from "../../components/todoCard/TodoCard";
-import { OPENED_ISSUE } from "../data/reduxState";
-import { getMouseEvent } from "../helpers/getMouseEvent";
-import renderWithProviders from "../helpers/renderWithProviders";
-import { fireEvent } from "@testing-library/react";
+import { fireEvent } from '@testing-library/react'
 
-describe("TEST TODOCARD", () => {
-  test("DRAG OVER CARD CHANGE BOX SHADOW OF CARD", () => {
-    const { getByTestId } = renderWithProviders(
-      <TodoCard todo={OPENED_ISSUE} />
-    );
+import TodoCard from '../../components/todoCard/TodoCard'
+import { OPENED_ISSUE } from '../data/reduxState'
+import { getMouseEvent } from '../helpers/getMouseEvent'
+import renderWithProviders from '../helpers/renderWithProviders'
 
-    const openedTodoCard = getByTestId("todo-card-open");
+describe('TEST TODOCARD', () => {
+  test('DRAG OVER CARD CHANGE BOX SHADOW OF CARD', () => {
+    const { getByTestId } = renderWithProviders(<TodoCard todo={OPENED_ISSUE} />)
 
-    const distaanceFromTopToCardMiddle =
-      openedTodoCard.offsetTop + openedTodoCard.offsetHeight / 2;
+    const openedTodoCard = getByTestId('todo-card-open')
 
-    const dragOverOnTopOfCard = getMouseEvent("dragover", {
+    const distaanceFromTopToCardMiddle = openedTodoCard.offsetTop + openedTodoCard.offsetHeight / 2
+
+    const dragOverOnTopOfCard = getMouseEvent('dragover', {
       pageY: distaanceFromTopToCardMiddle + 10,
-    });
+    })
 
-    fireEvent(openedTodoCard, dragOverOnTopOfCard);
+    fireEvent(openedTodoCard, dragOverOnTopOfCard)
 
-    expect(openedTodoCard).toHaveStyle({ boxShadow: "0px 8px 3px #0b5ed7" });
+    expect(openedTodoCard).toHaveStyle({ boxShadow: '0px 8px 3px #0b5ed7' })
 
-    const dragOverOnBottomOfCard = getMouseEvent("dragover", {
+    const dragOverOnBottomOfCard = getMouseEvent('dragover', {
       pageY: distaanceFromTopToCardMiddle - 10,
-    });
+    })
 
-    fireEvent(openedTodoCard, dragOverOnBottomOfCard);
+    fireEvent(openedTodoCard, dragOverOnBottomOfCard)
 
-    expect(openedTodoCard).toHaveStyle({ boxShadow: "0px -8px 3px #0b5ed7" });
-  });
+    expect(openedTodoCard).toHaveStyle({ boxShadow: '0px -8px 3px #0b5ed7' })
+  })
 
-  test("DRAGEND, DRAGLEAVE AND DROP CHANGES BOXSHADOW TO NONE", () => {
-    const { getByTestId } = renderWithProviders(
-      <TodoCard todo={OPENED_ISSUE} />
-    );
+  test('DRAGEND, DRAGLEAVE AND DROP CHANGES BOXSHADOW TO NONE', () => {
+    const { getByTestId } = renderWithProviders(<TodoCard todo={OPENED_ISSUE} />)
 
-    const openedTodoCard = getByTestId("todo-card-open");
+    const openedTodoCard = getByTestId('todo-card-open')
 
-    const distaanceFromTopToCardMiddle =
-      openedTodoCard.offsetTop + openedTodoCard.offsetHeight / 2;
+    const distaanceFromTopToCardMiddle = openedTodoCard.offsetTop + openedTodoCard.offsetHeight / 2
 
-    const dragOverOnTopOfCard = getMouseEvent("dragover", {
+    const dragOverOnTopOfCard = getMouseEvent('dragover', {
       pageY: distaanceFromTopToCardMiddle + 10,
-    });
+    })
 
-    fireEvent(openedTodoCard, dragOverOnTopOfCard);
+    fireEvent(openedTodoCard, dragOverOnTopOfCard)
 
-    fireEvent.dragEnd(openedTodoCard);
+    fireEvent.dragEnd(openedTodoCard)
 
-    expect(openedTodoCard).toHaveStyle({ boxShadow: "none" });
+    expect(openedTodoCard).toHaveStyle({ boxShadow: 'none' })
 
-    fireEvent(openedTodoCard, dragOverOnTopOfCard);
+    fireEvent(openedTodoCard, dragOverOnTopOfCard)
 
-    fireEvent.dragLeave(openedTodoCard);
+    fireEvent.dragLeave(openedTodoCard)
 
-    expect(openedTodoCard).toHaveStyle({ boxShadow: "none" });
+    expect(openedTodoCard).toHaveStyle({ boxShadow: 'none' })
 
-    fireEvent(openedTodoCard, dragOverOnTopOfCard);
+    fireEvent(openedTodoCard, dragOverOnTopOfCard)
 
-    fireEvent.drop(openedTodoCard);
+    fireEvent.drop(openedTodoCard)
 
-    expect(openedTodoCard).toHaveStyle({ boxShadow: "none" });
-  });
-});
+    expect(openedTodoCard).toHaveStyle({ boxShadow: 'none' })
+  })
+})

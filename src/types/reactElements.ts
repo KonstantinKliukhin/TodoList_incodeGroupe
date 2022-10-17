@@ -1,7 +1,3 @@
-import { ReactNode, ReactElement } from "react";
+import { ReactElement, ReactNode } from 'react'
 
-export type AnyReactElement =
-  | ReactNode
-  | ReactNode[]
-  | ReactElement
-  | ReactElement[];
+export type AnyReactElement = ReactNode | ReactNode[] | ReactElement | ReactElement[]

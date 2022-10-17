@@ -1,3 +1,3 @@
 export enum GithubURL {
-  BASEURL = "https://github.com/",
+  BASEURL = 'https://github.com/',
 }

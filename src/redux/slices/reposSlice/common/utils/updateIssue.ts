@@ -1,34 +1,34 @@
-import { IssueState } from "../../../../../types/issue";
-import { UpdateIssueType } from "../types/updateIssueState";
+import { IssueState } from '../../../../../types/issue'
+import { UpdateIssueType } from '../types/updateIssueState'
 
 const updateIssue: UpdateIssueType = (issueState, issue) => {
   switch (issueState) {
     case IssueState.OPEN:
-      issue.state = IssueState.OPEN;
+      issue.state = IssueState.OPEN
 
-      issue.closedAt = undefined;
-      issue.updatedAt = String(new Date());
+      issue.closedAt = undefined
+      issue.updatedAt = String(new Date())
 
-      break;
+      break
     case IssueState.INPROGRESS:
-      issue.state = IssueState.INPROGRESS;
+      issue.state = IssueState.INPROGRESS
 
-      issue.closedAt = undefined;
-      issue.updatedAt = String(new Date());
+      issue.closedAt = undefined
+      issue.updatedAt = String(new Date())
 
-      break;
+      break
     case IssueState.CLOSED:
-      issue.state = IssueState.CLOSED;
+      issue.state = IssueState.CLOSED
 
-      issue.closedAt = String(new Date());
-      issue.updatedAt = String(new Date());
+      issue.closedAt = String(new Date())
+      issue.updatedAt = String(new Date())
 
-      break;
+      break
     default: {
-      const exhaustiveCheck: never = issueState;
-      throw new Error(exhaustiveCheck);
+      const exhaustiveCheck: never = issueState
+      throw new Error(exhaustiveCheck)
     }
   }
-};
+}
 
-export default updateIssue;
+export default updateIssue

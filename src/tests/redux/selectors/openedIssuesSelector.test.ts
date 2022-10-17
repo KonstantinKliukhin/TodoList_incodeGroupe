@@ -1,22 +1,19 @@
-import { openedIssuesSelector } from "../../../redux/selectors/issuesSelectors";
-import { setupStore } from "../../../redux/store";
-import {
-  REDUX_ONE_REPO_FILLED_ISSUES,
-  OPENED_ISSUE,
-} from "../../data/reduxState";
+import { openedIssuesSelector } from '../../../redux/selectors/issuesSelectors'
+import { setupStore } from '../../../redux/store'
+import { OPENED_ISSUE, REDUX_ONE_REPO_FILLED_ISSUES } from '../../data/reduxState'
 
-describe("TEST OPENEDISSUESELECTOR", () => {
-  test("WORK WITH EMPTY STATE", () => {
-    const store = setupStore();
+describe('TEST OPENEDISSUESELECTOR', () => {
+  test('WORK WITH EMPTY STATE', () => {
+    const store = setupStore()
 
-    const state = store.getState();
-    expect(openedIssuesSelector(state)).toEqual([]);
-  });
+    const state = store.getState()
+    expect(openedIssuesSelector(state)).toEqual([])
+  })
 
-  test("WORKS WITH FILLED STATE", () => {
-    const store = setupStore(REDUX_ONE_REPO_FILLED_ISSUES);
+  test('WORKS WITH FILLED STATE', () => {
+    const store = setupStore(REDUX_ONE_REPO_FILLED_ISSUES)
 
-    const state = store.getState();
-    expect(openedIssuesSelector(state)).toEqual([OPENED_ISSUE]);
-  });
-});
+    const state = store.getState()
+    expect(openedIssuesSelector(state)).toEqual([OPENED_ISSUE])
+  })
+})
